@@ -2,7 +2,7 @@ version: '3.1'
 
 services:
   statistic-server:
-    build: /statistic/statistic-server
+    build: statistic/statistic-server
     container_name: statistic-server
     ports:
       - "9090:8080"
@@ -23,7 +23,7 @@ services:
       - POSTGRES_PASSWORD=postgres
 
   main-service:
-    build: /main-service
+    build: main-service
     container_name: main-service
     ports:
       - "8080:8080"

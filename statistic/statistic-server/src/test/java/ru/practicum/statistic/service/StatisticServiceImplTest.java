@@ -12,7 +12,7 @@ import ru.practicum.exceptions.implementation.BadRequestException;
 import ru.practicum.statistic.entity.AppEntity;
 import ru.practicum.statistic.entity.IpEntity;
 import ru.practicum.statistic.entity.Statistic;
-import ru.practicum.statistic.entity.Uri;
+import ru.practicum.statistic.entity.UriEntity;
 import ru.practicum.statistic.repository.AppRepository;
 import ru.practicum.statistic.repository.IpRepository;
 import ru.practicum.statistic.repository.StatisticRepository;
@@ -53,14 +53,14 @@ class StatisticServiceImplTest {
 
         Statistic statistic1 = Statistic.builder()
                 .id(1)
-                .uri(new Uri("/kek"))
+                .uri(new UriEntity("/kek"))
                 .app(new AppEntity("my-app"))
                 .ip(new IpEntity("1.1.1.1"))
                 .build();
 
         Statistic statistic2 = Statistic.builder()
                 .id(2)
-                .uri(new Uri("/kek"))
+                .uri(new UriEntity("/kek"))
                 .app(new AppEntity("my-app"))
                 .ip(new IpEntity("1.1.1.1"))
                 .build();
@@ -87,14 +87,14 @@ class StatisticServiceImplTest {
 
         Statistic statistic1 = Statistic.builder()
                 .id(1)
-                .uri(new Uri("/kek"))
+                .uri(new UriEntity("/kek"))
                 .app(new AppEntity("my-app"))
                 .ip(new IpEntity("1.1.1.1"))
                 .build();
 
         Statistic statistic2 = Statistic.builder()
                 .id(2)
-                .uri(new Uri("/kek"))
+                .uri(new UriEntity("/kek"))
                 .app(new AppEntity("my-app"))
                 .ip(new IpEntity("1.1.1.1"))
                 .build();
@@ -121,14 +121,14 @@ class StatisticServiceImplTest {
 
         Statistic statistic1 = Statistic.builder()
                 .id(1)
-                .uri(new Uri("/kek"))
+                .uri(new UriEntity("/kek"))
                 .app(new AppEntity("my-app"))
                 .ip(new IpEntity("1.1.1.1"))
                 .build();
 
         Statistic statistic2 = Statistic.builder()
                 .id(2)
-                .uri(new Uri("/kek"))
+                .uri(new UriEntity("/kek"))
                 .app(new AppEntity("my-app"))
                 .ip(new IpEntity("1.1.1.1"))
                 .build();
@@ -156,14 +156,14 @@ class StatisticServiceImplTest {
 
         Statistic statistic1 = Statistic.builder()
                 .id(1)
-                .uri(new Uri("/kek"))
+                .uri(new UriEntity("/kek"))
                 .app(new AppEntity("my-app"))
                 .ip(new IpEntity("1.1.1.1"))
                 .build();
 
         Statistic statistic2 = Statistic.builder()
                 .id(2)
-                .uri(new Uri("/kek"))
+                .uri(new UriEntity("/kek"))
                 .app(new AppEntity("my-app"))
                 .ip(new IpEntity("1.1.1.1"))
                 .build();
@@ -211,7 +211,7 @@ class StatisticServiceImplTest {
                 "2024-05-05 00:00:00");
 
         IpEntity ip = new IpEntity("1.1.1.1");
-        Uri uri = new Uri("/app");
+        UriEntity uri = new UriEntity("/app");
         AppEntity app = new AppEntity("my-app");
 
         when(appRepositoryMock.findOneByName(any()))
@@ -239,7 +239,7 @@ class StatisticServiceImplTest {
                 "2024-05-05 00:00:00");
 
         IpEntity ip = new IpEntity("1.1.1.1");
-        Uri uri = new Uri("/app");
+        UriEntity uri = new UriEntity("/app");
         AppEntity app = new AppEntity("my-app");
 
         when(appRepositoryMock.findOneByName(any()))
@@ -267,7 +267,7 @@ class StatisticServiceImplTest {
                 "2024-05-05 00:00:00");
 
         IpEntity ip = new IpEntity("1.1.1.1");
-        Uri uri = new Uri("/app");
+        UriEntity uri = new UriEntity("/app");
         AppEntity app = new AppEntity("my-app");
 
         when(appRepositoryMock.findOneByName(any()))

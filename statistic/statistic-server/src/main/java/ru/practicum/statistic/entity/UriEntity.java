@@ -9,9 +9,9 @@ import javax.persistence.*;
 @Table(name = "uris")
 @Data
 @NoArgsConstructor
-public class Uri {
+public class UriEntity {
 
-    public Uri(String name) {
+    public UriEntity(String name) {
         this.name = name;
     }
 

@@ -92,16 +92,9 @@ class StatisticServiceImplTest {
                 .ip(new IpEntity("1.1.1.1"))
                 .build();
 
-        StatisticEntity statistic2 = StatisticEntity.builder()
-                .id(2)
-                .uri(new UriEntity("/kek"))
-                .app(new AppEntity("my-app"))
-                .ip(new IpEntity("1.1.1.1"))
-                .build();
+        List<StatisticEntity> statistics = List.of(statistic1);
 
-        List<StatisticEntity> statistics = List.of(statistic1, statistic2);
-
-        when(statisticRepositoryMock.findAllByUriInAndStartBeforeAndEndBefore(any(), any(), any()))
+        when(statisticRepositoryMock.findAllByUriInAndStartBeforeAndEndBeforeGroupByIp(any(), any(), any()))
                 .thenReturn(statistics);
 
         List<StatisticDto> statisticDtos = statisticService.getStatistic(dto);
@@ -161,16 +154,9 @@ class StatisticServiceImplTest {
                 .ip(new IpEntity("1.1.1.1"))
                 .build();
 
-        StatisticEntity statistic2 = StatisticEntity.builder()
-                .id(2)
-                .uri(new UriEntity("/kek"))
-                .app(new AppEntity("my-app"))
-                .ip(new IpEntity("1.1.1.1"))
-                .build();
+        List<StatisticEntity> statistics = List.of(statistic1);
 
-        List<StatisticEntity> statistics = List.of(statistic1, statistic2);
-
-        when(statisticRepositoryMock.findAllByStartBeforeAndEndBefore(any(), any()))
+        when(statisticRepositoryMock.findAllByStartBeforeAndEndBeforeGroupByIp(any(), any()))
                 .thenReturn(statistics);
 
         List<StatisticDto> statisticDtos = statisticService.getStatistic(dto);
@@ -215,12 +201,13 @@ class StatisticServiceImplTest {
         AppEntity app = new AppEntity("my-app");
 
         when(appRepositoryMock.findOneByName(any()))
-                .thenReturn(Optional.empty())
-                .thenReturn(Optional.of(app));
+                .thenReturn(Optional.empty());
         when(uriRepositoryMock.findOneByName(any()))
                 .thenReturn(Optional.of(uri));
         when(ipRepositoryMock.findOneByAddress(any()))
                 .thenReturn(Optional.of(ip));
+        when(appRepositoryMock.save(any()))
+                .thenReturn(app);
 
         statisticService.saveStatistic(dto);
 
@@ -247,8 +234,9 @@ class StatisticServiceImplTest {
         when(uriRepositoryMock.findOneByName(any()))
                 .thenReturn(Optional.of(uri));
         when(ipRepositoryMock.findOneByAddress(any()))
-                .thenReturn(Optional.empty())
-                .thenReturn(Optional.of(ip));
+                .thenReturn(Optional.empty());
+        when(ipRepositoryMock.save(any()))
+                .thenReturn(ip);
 
         statisticService.saveStatistic(dto);
 
@@ -273,10 +261,11 @@ class StatisticServiceImplTest {
         when(appRepositoryMock.findOneByName(any()))
                 .thenReturn(Optional.of(app));
         when(uriRepositoryMock.findOneByName(any()))
-                .thenReturn(Optional.empty())
-                .thenReturn(Optional.of(uri));
+                .thenReturn(Optional.empty());
         when(ipRepositoryMock.findOneByAddress(any()))
                 .thenReturn(Optional.of(ip));
+        when(uriRepositoryMock.save(any()))
+                .thenReturn(uri);
 
         statisticService.saveStatistic(dto);
 

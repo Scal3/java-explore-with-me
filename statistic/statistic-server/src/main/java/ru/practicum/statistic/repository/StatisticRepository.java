@@ -12,11 +12,27 @@ import java.util.List;
 @Repository
 public interface StatisticRepository extends JpaRepository<StatisticEntity, Long> {
 
-    @EntityGraph(attributePaths = {"app", "uri"})
+    @EntityGraph(attributePaths = {"app", "uri", "ip"})
     @Query("SELECT s FROM StatisticEntity s JOIN s.uri u WHERE u.name IN :uris AND s.timestamp > :start AND s.timestamp < :end")
     List<StatisticEntity> findAllByUriInAndStartBeforeAndEndBefore(List<String> uris, LocalDateTime start, LocalDateTime end);
 
-    @EntityGraph(attributePaths = {"app", "uri"})
+    @EntityGraph(attributePaths = {"app", "uri", "ip"})
     @Query("SELECT s FROM StatisticEntity s WHERE s.timestamp > :start AND s.timestamp < :end")
     List<StatisticEntity> findAllByStartBeforeAndEndBefore(LocalDateTime start, LocalDateTime end);
+
+    @EntityGraph(attributePaths = {"app", "uri", "ip"})
+    @Query("SELECT s FROM StatisticEntity s " +
+            "JOIN s.uri u " +
+            "WHERE u.name IN :uris " +
+            "AND s.timestamp > :start " +
+            "AND s.timestamp < :end " +
+            "AND s.id IN (SELECT MIN(s.id) FROM StatisticEntity s GROUP BY s.ip.address)")
+    List<StatisticEntity> findAllByUriInAndStartBeforeAndEndBeforeGroupByIp(List<String> uris, LocalDateTime start, LocalDateTime end);
+
+    @EntityGraph(attributePaths = {"app", "uri", "ip"})
+    @Query("SELECT s FROM StatisticEntity s " +
+            "WHERE s.timestamp > :start " +
+            "AND s.timestamp < :end " +
+            "AND s.id IN (SELECT MIN(s.id) FROM StatisticEntity s GROUP BY s.ip.address)")
+    List<StatisticEntity> findAllByStartBeforeAndEndBeforeGroupByIp(LocalDateTime start, LocalDateTime end);
 }

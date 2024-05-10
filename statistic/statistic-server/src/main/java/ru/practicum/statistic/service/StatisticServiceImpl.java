@@ -59,20 +59,21 @@ public class StatisticServiceImpl implements StatisticService {
         }
 
         if (dto.getUris() != null) {
-            statistics = statisticRepository
-                    .findAllByUriInAndStartBeforeAndEndBefore(dto.getUris(), start, end);
+            if (dto.isUnique()) {
+                statistics = statisticRepository
+                        .findAllByUriInAndStartBeforeAndEndBeforeGroupByIp(dto.getUris(), start, end);
+            } else {
+                statistics = statisticRepository
+                        .findAllByUriInAndStartBeforeAndEndBefore(dto.getUris(), start, end);
+            }
         } else {
-            statistics = statisticRepository
-                    .findAllByStartBeforeAndEndBefore(start, end);
-        }
-
-        if (dto.isUnique()) {
-            statistics = statistics.stream()
-                    .collect(Collectors.groupingBy(StatisticEntity::getIp))
-                    .values()
-                    .stream()
-                    .map(statisticsWithSameIp -> statisticsWithSameIp.get(0))
-                    .collect(Collectors.toList());
+            if (dto.isUnique()) {
+                statistics = statisticRepository
+                        .findAllByStartBeforeAndEndBeforeGroupByIp(start, end);
+            } else {
+                statistics = statisticRepository
+                        .findAllByStartBeforeAndEndBefore(start, end);
+            }
         }
 
         log.info("Exiting getStatistic method");

@@ -1,27 +1,27 @@
 package ru.practicum;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.dto.CreateStatisticDto;
 
 import java.util.List;
 import java.util.Map;
 
+@Component
 public class StatisticClient extends BaseClient {
 
     private static final String API_PREFIX_HIT = "/hit";
 
     private static final String API_PREFIX_STATS = "/stats";
 
-    private static final String SERVER_URL = "http://localhost:9090";
-
-
-    public StatisticClient(RestTemplateBuilder builder) {
+    public StatisticClient(@Value("${ewm.server.url}") String server_url, RestTemplateBuilder builder) {
         super(
                 builder
-                        .uriTemplateHandler(new DefaultUriBuilderFactory(SERVER_URL))
+                        .uriTemplateHandler(new DefaultUriBuilderFactory(server_url))
                         .requestFactory(HttpComponentsClientHttpRequestFactory::new)
                         .build()
         );

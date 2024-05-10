@@ -10,7 +10,7 @@ import ru.practicum.dto.StatisticDto;
 import ru.practicum.exceptions.implementation.BadRequestException;
 import ru.practicum.statistic.entity.AppEntity;
 import ru.practicum.statistic.entity.IpEntity;
-import ru.practicum.statistic.entity.Statistic;
+import ru.practicum.statistic.entity.StatisticEntity;
 import ru.practicum.statistic.entity.UriEntity;
 import ru.practicum.statistic.repository.AppRepository;
 import ru.practicum.statistic.repository.IpRepository;
@@ -43,7 +43,7 @@ public class StatisticServiceImpl implements StatisticService {
     @Override
     public List<StatisticDto> getStatistic(GetStatisticDto dto) {
         log.info("Entering getStatistic method: GetStatisticDto = {}", dto);
-        List<Statistic> statistics;
+        List<StatisticEntity> statistics;
         LocalDateTime start;
         LocalDateTime end;
 
@@ -68,7 +68,7 @@ public class StatisticServiceImpl implements StatisticService {
 
         if (dto.isUnique()) {
             statistics = statistics.stream()
-                    .collect(Collectors.groupingBy(Statistic::getIp))
+                    .collect(Collectors.groupingBy(StatisticEntity::getIp))
                     .values()
                     .stream()
                     .map(statisticsWithSameIp -> statisticsWithSameIp.get(0))
@@ -115,14 +115,14 @@ public class StatisticServiceImpl implements StatisticService {
         UriEntity uri = uriRepository.findOneByName(dto.getUri()).get();
         IpEntity ip = ipRepository.findOneByAddress(dto.getIp()).get();
 
-        statisticRepository.save(new Statistic(app, uri, ip, timestamp));
+        statisticRepository.save(new StatisticEntity(app, uri, ip, timestamp));
         log.info("Exiting saveStatistic method");
     }
 
-    private List<StatisticDto> mapToStatisticDtoList(List<Statistic> statistic) {
+    private List<StatisticDto> mapToStatisticDtoList(List<StatisticEntity> statistic) {
         Map<String, StatisticDto> statisticDtoMap = new HashMap<>();
 
-        for (Statistic s : statistic) {
+        for (StatisticEntity s : statistic) {
             if (statisticDtoMap.containsKey(s.getUri().getName())) {
                 StatisticDto statisticDto = statisticDtoMap.get(s.getUri().getName());
                 statisticDto.setHits(statisticDto.getHits() + 1);

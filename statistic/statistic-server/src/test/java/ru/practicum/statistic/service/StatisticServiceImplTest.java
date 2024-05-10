@@ -11,7 +11,7 @@ import ru.practicum.dto.StatisticDto;
 import ru.practicum.exceptions.implementation.BadRequestException;
 import ru.practicum.statistic.entity.AppEntity;
 import ru.practicum.statistic.entity.IpEntity;
-import ru.practicum.statistic.entity.Statistic;
+import ru.practicum.statistic.entity.StatisticEntity;
 import ru.practicum.statistic.entity.UriEntity;
 import ru.practicum.statistic.repository.AppRepository;
 import ru.practicum.statistic.repository.IpRepository;
@@ -51,21 +51,21 @@ class StatisticServiceImplTest {
                 List.of("/kek"),
                 false);
 
-        Statistic statistic1 = Statistic.builder()
+        StatisticEntity statistic1 = StatisticEntity.builder()
                 .id(1)
                 .uri(new UriEntity("/kek"))
                 .app(new AppEntity("my-app"))
                 .ip(new IpEntity("1.1.1.1"))
                 .build();
 
-        Statistic statistic2 = Statistic.builder()
+        StatisticEntity statistic2 = StatisticEntity.builder()
                 .id(2)
                 .uri(new UriEntity("/kek"))
                 .app(new AppEntity("my-app"))
                 .ip(new IpEntity("1.1.1.1"))
                 .build();
 
-        List<Statistic> statistics = List.of(statistic1, statistic2);
+        List<StatisticEntity> statistics = List.of(statistic1, statistic2);
 
         when(statisticRepositoryMock.findAllByUriInAndStartBeforeAndEndBefore(any(), any(), any()))
                 .thenReturn(statistics);
@@ -85,21 +85,21 @@ class StatisticServiceImplTest {
                 List.of("/kek"),
                 true);
 
-        Statistic statistic1 = Statistic.builder()
+        StatisticEntity statistic1 = StatisticEntity.builder()
                 .id(1)
                 .uri(new UriEntity("/kek"))
                 .app(new AppEntity("my-app"))
                 .ip(new IpEntity("1.1.1.1"))
                 .build();
 
-        Statistic statistic2 = Statistic.builder()
+        StatisticEntity statistic2 = StatisticEntity.builder()
                 .id(2)
                 .uri(new UriEntity("/kek"))
                 .app(new AppEntity("my-app"))
                 .ip(new IpEntity("1.1.1.1"))
                 .build();
 
-        List<Statistic> statistics = List.of(statistic1, statistic2);
+        List<StatisticEntity> statistics = List.of(statistic1, statistic2);
 
         when(statisticRepositoryMock.findAllByUriInAndStartBeforeAndEndBefore(any(), any(), any()))
                 .thenReturn(statistics);
@@ -119,21 +119,21 @@ class StatisticServiceImplTest {
                 null,
                 false);
 
-        Statistic statistic1 = Statistic.builder()
+        StatisticEntity statistic1 = StatisticEntity.builder()
                 .id(1)
                 .uri(new UriEntity("/kek"))
                 .app(new AppEntity("my-app"))
                 .ip(new IpEntity("1.1.1.1"))
                 .build();
 
-        Statistic statistic2 = Statistic.builder()
+        StatisticEntity statistic2 = StatisticEntity.builder()
                 .id(2)
                 .uri(new UriEntity("/kek"))
                 .app(new AppEntity("my-app"))
                 .ip(new IpEntity("1.1.1.1"))
                 .build();
 
-        List<Statistic> statistics = List.of(statistic1, statistic2);
+        List<StatisticEntity> statistics = List.of(statistic1, statistic2);
 
         when(statisticRepositoryMock.findAllByStartBeforeAndEndBefore(any(), any()))
                 .thenReturn(statistics);
@@ -154,21 +154,21 @@ class StatisticServiceImplTest {
                 null,
                 true);
 
-        Statistic statistic1 = Statistic.builder()
+        StatisticEntity statistic1 = StatisticEntity.builder()
                 .id(1)
                 .uri(new UriEntity("/kek"))
                 .app(new AppEntity("my-app"))
                 .ip(new IpEntity("1.1.1.1"))
                 .build();
 
-        Statistic statistic2 = Statistic.builder()
+        StatisticEntity statistic2 = StatisticEntity.builder()
                 .id(2)
                 .uri(new UriEntity("/kek"))
                 .app(new AppEntity("my-app"))
                 .ip(new IpEntity("1.1.1.1"))
                 .build();
 
-        List<Statistic> statistics = List.of(statistic1, statistic2);
+        List<StatisticEntity> statistics = List.of(statistic1, statistic2);
 
         when(statisticRepositoryMock.findAllByStartBeforeAndEndBefore(any(), any()))
                 .thenReturn(statistics);

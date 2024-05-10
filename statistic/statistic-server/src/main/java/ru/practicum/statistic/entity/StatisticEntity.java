@@ -14,9 +14,9 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Statistic {
+public class StatisticEntity {
 
-    public Statistic(AppEntity app, UriEntity uri, IpEntity ip, LocalDateTime timestamp) {
+    public StatisticEntity(AppEntity app, UriEntity uri, IpEntity ip, LocalDateTime timestamp) {
         this.app = app;
         this.uri = uri;
         this.ip = ip;

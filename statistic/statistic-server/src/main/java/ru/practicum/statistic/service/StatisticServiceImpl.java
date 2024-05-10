@@ -8,7 +8,7 @@ import ru.practicum.dto.CreateStatisticDto;
 import ru.practicum.dto.GetStatisticDto;
 import ru.practicum.dto.StatisticDto;
 import ru.practicum.exceptions.implementation.BadRequestException;
-import ru.practicum.statistic.entity.App;
+import ru.practicum.statistic.entity.AppEntity;
 import ru.practicum.statistic.entity.Ip;
 import ru.practicum.statistic.entity.Statistic;
 import ru.practicum.statistic.entity.Uri;
@@ -100,7 +100,7 @@ public class StatisticServiceImpl implements StatisticService {
         }
 
         if (appRepository.findOneByName(dto.getApp()).isEmpty()) {
-            appRepository.save(new App(dto.getApp()));
+            appRepository.save(new AppEntity(dto.getApp()));
         }
 
         if (uriRepository.findOneByName(dto.getUri()).isEmpty()) {
@@ -111,7 +111,7 @@ public class StatisticServiceImpl implements StatisticService {
             ipRepository.save(new Ip(dto.getIp()));
         }
 
-        App app = appRepository.findOneByName(dto.getApp()).get();
+        AppEntity app = appRepository.findOneByName(dto.getApp()).get();
         Uri uri = uriRepository.findOneByName(dto.getUri()).get();
         Ip ip = ipRepository.findOneByAddress(dto.getIp()).get();
 

@@ -9,9 +9,9 @@ import javax.persistence.*;
 @Table(name = "apps")
 @Data
 @NoArgsConstructor
-public class App {
+public class AppEntity {
 
-    public App(String name) {
+    public AppEntity(String name) {
         this.name = name;
     }
 

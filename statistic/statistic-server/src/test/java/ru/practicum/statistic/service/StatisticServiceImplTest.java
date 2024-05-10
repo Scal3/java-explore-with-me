@@ -10,7 +10,7 @@ import ru.practicum.dto.GetStatisticDto;
 import ru.practicum.dto.StatisticDto;
 import ru.practicum.exceptions.implementation.BadRequestException;
 import ru.practicum.statistic.entity.AppEntity;
-import ru.practicum.statistic.entity.Ip;
+import ru.practicum.statistic.entity.IpEntity;
 import ru.practicum.statistic.entity.Statistic;
 import ru.practicum.statistic.entity.Uri;
 import ru.practicum.statistic.repository.AppRepository;
@@ -55,14 +55,14 @@ class StatisticServiceImplTest {
                 .id(1)
                 .uri(new Uri("/kek"))
                 .app(new AppEntity("my-app"))
-                .ip(new Ip("1.1.1.1"))
+                .ip(new IpEntity("1.1.1.1"))
                 .build();
 
         Statistic statistic2 = Statistic.builder()
                 .id(2)
                 .uri(new Uri("/kek"))
                 .app(new AppEntity("my-app"))
-                .ip(new Ip("1.1.1.1"))
+                .ip(new IpEntity("1.1.1.1"))
                 .build();
 
         List<Statistic> statistics = List.of(statistic1, statistic2);
@@ -89,14 +89,14 @@ class StatisticServiceImplTest {
                 .id(1)
                 .uri(new Uri("/kek"))
                 .app(new AppEntity("my-app"))
-                .ip(new Ip("1.1.1.1"))
+                .ip(new IpEntity("1.1.1.1"))
                 .build();
 
         Statistic statistic2 = Statistic.builder()
                 .id(2)
                 .uri(new Uri("/kek"))
                 .app(new AppEntity("my-app"))
-                .ip(new Ip("1.1.1.1"))
+                .ip(new IpEntity("1.1.1.1"))
                 .build();
 
         List<Statistic> statistics = List.of(statistic1, statistic2);
@@ -123,14 +123,14 @@ class StatisticServiceImplTest {
                 .id(1)
                 .uri(new Uri("/kek"))
                 .app(new AppEntity("my-app"))
-                .ip(new Ip("1.1.1.1"))
+                .ip(new IpEntity("1.1.1.1"))
                 .build();
 
         Statistic statistic2 = Statistic.builder()
                 .id(2)
                 .uri(new Uri("/kek"))
                 .app(new AppEntity("my-app"))
-                .ip(new Ip("1.1.1.1"))
+                .ip(new IpEntity("1.1.1.1"))
                 .build();
 
         List<Statistic> statistics = List.of(statistic1, statistic2);
@@ -158,14 +158,14 @@ class StatisticServiceImplTest {
                 .id(1)
                 .uri(new Uri("/kek"))
                 .app(new AppEntity("my-app"))
-                .ip(new Ip("1.1.1.1"))
+                .ip(new IpEntity("1.1.1.1"))
                 .build();
 
         Statistic statistic2 = Statistic.builder()
                 .id(2)
                 .uri(new Uri("/kek"))
                 .app(new AppEntity("my-app"))
-                .ip(new Ip("1.1.1.1"))
+                .ip(new IpEntity("1.1.1.1"))
                 .build();
 
         List<Statistic> statistics = List.of(statistic1, statistic2);
@@ -210,7 +210,7 @@ class StatisticServiceImplTest {
                 "1.1.1.1",
                 "2024-05-05 00:00:00");
 
-        Ip ip = new Ip("1.1.1.1");
+        IpEntity ip = new IpEntity("1.1.1.1");
         Uri uri = new Uri("/app");
         AppEntity app = new AppEntity("my-app");
 
@@ -238,7 +238,7 @@ class StatisticServiceImplTest {
                 "1.1.1.1",
                 "2024-05-05 00:00:00");
 
-        Ip ip = new Ip("1.1.1.1");
+        IpEntity ip = new IpEntity("1.1.1.1");
         Uri uri = new Uri("/app");
         AppEntity app = new AppEntity("my-app");
 
@@ -266,7 +266,7 @@ class StatisticServiceImplTest {
                 "1.1.1.1",
                 "2024-05-05 00:00:00");
 
-        Ip ip = new Ip("1.1.1.1");
+        IpEntity ip = new IpEntity("1.1.1.1");
         Uri uri = new Uri("/app");
         AppEntity app = new AppEntity("my-app");
 

@@ -2,12 +2,12 @@ package ru.practicum.statistic.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import ru.practicum.statistic.entity.Ip;
+import ru.practicum.statistic.entity.IpEntity;
 
 import java.util.Optional;
 
 @Repository
-public interface IpRepository extends JpaRepository<Ip, Long> {
+public interface IpRepository extends JpaRepository<IpEntity, Long> {
 
-    Optional<Ip> findOneByAddress(String address);
+    Optional<IpEntity> findOneByAddress(String address);
 }

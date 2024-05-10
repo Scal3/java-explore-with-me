@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Statistic {
 
-    public Statistic(AppEntity app, Uri uri, Ip ip, LocalDateTime timestamp) {
+    public Statistic(AppEntity app, Uri uri, IpEntity ip, LocalDateTime timestamp) {
         this.app = app;
         this.uri = uri;
         this.ip = ip;
@@ -37,7 +37,7 @@ public class Statistic {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ip_id", nullable = false)
-    private Ip ip;
+    private IpEntity ip;
 
     @Column(name = "created", nullable = false)
     private LocalDateTime timestamp;

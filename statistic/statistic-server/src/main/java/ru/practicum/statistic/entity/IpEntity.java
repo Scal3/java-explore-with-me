@@ -9,9 +9,9 @@ import javax.persistence.*;
 @Table(name = "ipis")
 @Data
 @NoArgsConstructor
-public class Ip {
+public class IpEntity {
 
-    public Ip(String address) {
+    public IpEntity(String address) {
         this.address = address;
     }
 

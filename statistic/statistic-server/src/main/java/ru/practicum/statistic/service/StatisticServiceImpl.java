@@ -9,7 +9,7 @@ import ru.practicum.dto.GetStatisticDto;
 import ru.practicum.dto.StatisticDto;
 import ru.practicum.exceptions.implementation.BadRequestException;
 import ru.practicum.statistic.entity.AppEntity;
-import ru.practicum.statistic.entity.Ip;
+import ru.practicum.statistic.entity.IpEntity;
 import ru.practicum.statistic.entity.Statistic;
 import ru.practicum.statistic.entity.Uri;
 import ru.practicum.statistic.repository.AppRepository;
@@ -108,12 +108,12 @@ public class StatisticServiceImpl implements StatisticService {
         }
 
         if (ipRepository.findOneByAddress(dto.getIp()).isEmpty()) {
-            ipRepository.save(new Ip(dto.getIp()));
+            ipRepository.save(new IpEntity(dto.getIp()));
         }
 
         AppEntity app = appRepository.findOneByName(dto.getApp()).get();
         Uri uri = uriRepository.findOneByName(dto.getUri()).get();
-        Ip ip = ipRepository.findOneByAddress(dto.getIp()).get();
+        IpEntity ip = ipRepository.findOneByAddress(dto.getIp()).get();
 
         statisticRepository.save(new Statistic(app, uri, ip, timestamp));
         log.info("Exiting saveStatistic method");

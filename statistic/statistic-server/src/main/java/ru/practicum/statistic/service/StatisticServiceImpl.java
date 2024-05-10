@@ -86,7 +86,6 @@ public class StatisticServiceImpl implements StatisticService {
     @Override
     public void saveStatistic(CreateStatisticDto dto) {
         log.info("Entering saveStatistic method: CreateStatisticDto = {}", dto);
-
         LocalDateTime timestamp;
 
         try {
@@ -99,23 +98,27 @@ public class StatisticServiceImpl implements StatisticService {
             throw new BadRequestException("Date is not correct");
         }
 
-        if (appRepository.findOneByName(dto.getApp()).isEmpty()) {
-            appRepository.save(new AppEntity(dto.getApp()));
+        Optional<AppEntity> optionalApp = appRepository.findOneByName(dto.getApp());
+        Optional<UriEntity> optionalUri = uriRepository.findOneByName(dto.getUri());
+        Optional<IpEntity> optionalIp = ipRepository.findOneByAddress(dto.getIp());
+
+        if (optionalApp.isEmpty()) {
+            optionalApp = Optional.of(appRepository.save(new AppEntity(dto.getApp())));
         }
 
-        if (uriRepository.findOneByName(dto.getUri()).isEmpty()) {
-            uriRepository.save(new UriEntity(dto.getUri()));
+        if (optionalUri.isEmpty()) {
+            optionalUri = Optional.of(uriRepository.save(new UriEntity(dto.getUri())));
         }
 
-        if (ipRepository.findOneByAddress(dto.getIp()).isEmpty()) {
-            ipRepository.save(new IpEntity(dto.getIp()));
+        if (optionalIp.isEmpty()) {
+            optionalIp = Optional.of(ipRepository.save(new IpEntity(dto.getIp())));
         }
 
-        AppEntity app = appRepository.findOneByName(dto.getApp()).get();
-        UriEntity uri = uriRepository.findOneByName(dto.getUri()).get();
-        IpEntity ip = ipRepository.findOneByAddress(dto.getIp()).get();
-
-        statisticRepository.save(new StatisticEntity(app, uri, ip, timestamp));
+        statisticRepository.save(new StatisticEntity(
+                optionalApp.get(),
+                optionalUri.get(),
+                optionalIp.get(),
+                timestamp));
         log.info("Exiting saveStatistic method");
     }
 

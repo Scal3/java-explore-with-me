@@ -18,10 +18,10 @@ public class StatisticClient extends BaseClient {
 
     private static final String API_PREFIX_STATS = "/stats";
 
-    public StatisticClient(@Value("${ewm.server.url}") String server_url, RestTemplateBuilder builder) {
+    public StatisticClient(@Value("${ewm.server.url}") String serverUrl, RestTemplateBuilder builder) {
         super(
                 builder
-                        .uriTemplateHandler(new DefaultUriBuilderFactory(server_url))
+                        .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl))
                         .requestFactory(HttpComponentsClientHttpRequestFactory::new)
                         .build()
         );

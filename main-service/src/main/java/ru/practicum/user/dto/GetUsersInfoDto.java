@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 public class GetUsersInfoDto {
 
-    private List<Integer> ids;
+    private List<Long> ids;
 
     private int from;
 

@@ -34,7 +34,7 @@ public class CategoryAdminController {
     @DeleteMapping("/{catId}")
     public void deleteCategoryById(@PathVariable @Positive long catId) {
         log.info("Entering deleteCategoryById: catId = {}", catId);
-        CategoryDto categoryDto = categoryService.getCategoryById(catId);
+        categoryService.deleteCategory(catId);
         log.info("Exiting deleteCategoryById");
     }
 

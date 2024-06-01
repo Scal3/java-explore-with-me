@@ -2,7 +2,7 @@ package ru.practicum.event.entity;
 
 import lombok.*;
 import ru.practicum.category.entity.CategoryEntity;
-import ru.practicum.event.EventState;
+import ru.practicum.event.enums.EventState;
 import ru.practicum.user.entity.UserEntity;
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -22,13 +22,13 @@ public class EventEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 2000)
     private String annotation;
 
     @Column(nullable = false)
     private LocalDateTime createdOn;
 
-    @Column(nullable = false, length = 512)
+    @Column(nullable = false, length = 7000)
     private String description;
 
     @Column(nullable = false)
@@ -49,7 +49,7 @@ public class EventEntity {
     @Column(nullable = false)
     private EventState state;
 
-    @Column(nullable = false,  length = 55)
+    @Column(nullable = false,  length = 120)
     private String title;
 
     @Column(nullable = false)

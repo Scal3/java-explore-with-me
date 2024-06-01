@@ -11,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import ru.practicum.category.dto.CategoryDto;
-import ru.practicum.category.dto.GetCategoriesDto;
 import ru.practicum.category.dto.NewCategoryDto;
 import ru.practicum.category.dto.UpdateCategoryDto;
 import ru.practicum.category.entity.CategoryEntity;
@@ -120,26 +119,17 @@ class CategoryServiceImplTest {
 
     @Test
     void getCategories_normalCase_thenReturnListCategoryDto() {
-        GetCategoriesDto getCategoriesDto = GetCategoriesDto.builder()
-                .size(10)
-                .from(0)
-                .build();
-
-        Pageable pageable = PageRequest.of(
-                getCategoriesDto.getFrom() / getCategoriesDto.getSize(),
-                getCategoriesDto.getSize());
-
+        Pageable pageable = PageRequest.of(0 / 10, 10);
         Page<CategoryEntity> categoryEntities = new PageImpl<>(
                 List.of(new CategoryEntity(), new CategoryEntity())
         );
-
         List<CategoryDto> categoryDtos = List.of(new CategoryDto());
 
         when(categoryRepositoryMock.findAll(pageable)).thenReturn(categoryEntities);
         when(modelMapperMock.map(any(), eq(new TypeToken<List<CategoryDto>>() {}.getType())))
                 .thenReturn(categoryDtos);
 
-        List<CategoryDto> result = categoryService.getCategories(getCategoriesDto);
+        List<CategoryDto> result = categoryService.getCategories(pageable);
 
         assertEquals(1, result.size());
     }

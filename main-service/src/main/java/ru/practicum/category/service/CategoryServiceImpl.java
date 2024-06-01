@@ -4,12 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.category.dto.CategoryDto;
-import ru.practicum.category.dto.GetCategoriesDto;
 import ru.practicum.category.dto.NewCategoryDto;
 import ru.practicum.category.dto.UpdateCategoryDto;
 import ru.practicum.category.entity.CategoryEntity;
@@ -78,9 +76,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<CategoryDto> getCategories(GetCategoriesDto dto) {
-        log.info("Entering getCategories: GetCategoriesDto = {}", dto);
-        Pageable pageable = PageRequest.of(dto.getFrom() / dto.getSize(), dto.getSize());
+    public List<CategoryDto> getCategories(Pageable pageable) {
+        log.info("Entering getCategories: pageable = {}", pageable);
         List<CategoryEntity> categoryEntities = categoryRepository.findAll(pageable).toList();
         log.info("Exiting getCategories");
 

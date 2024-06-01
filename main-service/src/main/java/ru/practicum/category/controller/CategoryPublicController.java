@@ -2,11 +2,12 @@ package ru.practicum.category.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.category.dto.CategoryDto;
-import ru.practicum.category.dto.GetCategoriesDto;
 import ru.practicum.category.service.CategoryService;
 import javax.validation.constraints.Positive;
 import java.util.List;
@@ -27,11 +28,8 @@ public class CategoryPublicController {
             @RequestParam(required = false, defaultValue = "10") int size
     ) {
         log.info("Entering getCategories: from={}, size={}", from, size);
-        GetCategoriesDto dto = GetCategoriesDto.builder()
-                        .from(from)
-                        .size(size)
-                        .build();
-        List<CategoryDto> categoryDtos = categoryService.getCategories(dto);
+        Pageable pageable = PageRequest.of(from / size, size);
+        List<CategoryDto> categoryDtos = categoryService.getCategories(pageable);
         log.info("Exiting getCategories");
 
         return categoryDtos;

@@ -8,6 +8,6 @@ import javax.validation.constraints.NotBlank;
 @Setter
 public class NewCategoryDto {
 
-    @NotBlank
+    @NotBlank(message = "name can not be null or blank")
     private String name;
 }

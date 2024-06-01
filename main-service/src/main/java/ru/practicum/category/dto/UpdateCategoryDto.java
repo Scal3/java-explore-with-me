@@ -10,6 +10,6 @@ public class UpdateCategoryDto {
 
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "name can not be null or blank")
     private String name;
 }

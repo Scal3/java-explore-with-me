@@ -34,6 +34,6 @@ public class CategoryEntity {
 
         CategoryEntity c = (CategoryEntity) o;
 
-        return id.equals(c.id) && name.equals(c.name);
+        return Objects.equals(id, c.id) && Objects.equals(name, c.name);
     }
 }

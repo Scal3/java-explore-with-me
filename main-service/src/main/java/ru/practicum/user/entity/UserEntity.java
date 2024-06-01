@@ -37,6 +37,8 @@ public class UserEntity {
 
         UserEntity u = (UserEntity) o;
 
-        return id.equals(u.id) && email.equals(u.email) && name.equals(u.name);
+        return Objects.equals(id, u.id)
+                && Objects.equals(email, u.email)
+                && Objects.equals(name, u.name);
     }
 }

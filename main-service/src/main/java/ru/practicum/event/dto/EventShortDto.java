@@ -13,8 +13,6 @@ public class EventShortDto {
 
     private Long id;
 
-    private String description;
-
     private String annotation;
 
     private CategoryDto category;

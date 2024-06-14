@@ -7,12 +7,21 @@ import org.modelmapper.TypeToken;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.category.entity.CategoryEntity;
+import ru.practicum.category.service.CategoryService;
 import ru.practicum.event.dto.*;
 import ru.practicum.event.entity.EventEntity;
+import ru.practicum.event.entity.LocationEntity;
+import ru.practicum.event.enums.EventState;
 import ru.practicum.event.repository.EventRepository;
+import ru.practicum.event.repository.LocationRepository;
+import ru.practicum.exception.error.ForbiddenException;
+import ru.practicum.user.entity.UserEntity;
+import ru.practicum.user.service.UserService;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -22,6 +31,12 @@ public class EventServiceImpl implements EventService {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private final EventRepository eventRepository;
+
+    private final LocationRepository locationRepository;
+
+    private final CategoryService categoryService;
+
+    private final UserService userService;
 
     private final ModelMapper mapper;
 
@@ -41,18 +56,43 @@ public class EventServiceImpl implements EventService {
     @Transactional
     @Override
     public EventFullDto createEvent(long userId, NewEventDto dto) {
-        // Обратите внимание: дата и время на которые намечено событие не может быть раньше,
-        // чем через два часа от текущего момента
         log.info("Entering createEvent: userId = {}, NewEventDto = {}", userId, dto);
         LocalDateTime eventStartDate = LocalDateTime.parse(dto.getEventDate(), formatter);
 
         if (!isEventStartDateCorrect(eventStartDate)) {
-            // TODO throw an exception FORBIDDEN
+            throw new ForbiddenException(
+                    "For the requested operation the conditions are not met.",
+                    "Field: eventDate. " +
+                            "Error: должно содержать дату, которая еще не наступила. Value: " +
+                            eventStartDate
+            );
         }
 
+        CategoryEntity categoryEntity =
+                mapper.map(categoryService.getCategoryById(dto.getCategory()), CategoryEntity.class);
+        UserEntity userEntity = mapper.map(userService.getUserById(userId), UserEntity.class);
+        LocationEntity locationEntity =
+                getOrCreateLocationEntity(dto.getLocation().getLat(), dto.getLocation().getLon());
+        EventEntity eventEntity = EventEntity.builder()
+                        .annotation(dto.getAnnotation())
+                        .createdOn(LocalDateTime.now())
+                        .description(dto.getDescription())
+                        .eventDate(eventStartDate)
+                        .paid(dto.getPaid())
+                        .participantLimit(dto.getParticipantLimit())
+                        .requestModeration(dto.getRequestModeration())
+                        .state(EventState.PENDING)
+                        .title(dto.getTitle())
+                        .views(0)
+                        .category(categoryEntity)
+                        .initiator(userEntity)
+                        .location(locationEntity)
+                        .build();
+        eventRepository.save(eventEntity);
+        EventFullDto result = mapper.map(eventEntity, EventFullDto.class);
         log.info("Exiting createEvent");
 
-        return null;
+        return result;
     }
 
     @Transactional(readOnly = true)
@@ -98,6 +138,24 @@ public class EventServiceImpl implements EventService {
     }
 
     private boolean isEventStartDateCorrect(LocalDateTime eventStartDate) {
-        return true;
+        return eventStartDate.isAfter(LocalDateTime.now().plusHours(2));
+    }
+
+    @Transactional
+    private LocationEntity getOrCreateLocationEntity(Double lat, Double lon) {
+        Optional<LocationEntity> locationEntityOptional =
+                locationRepository.findByLatAndLon(lat, lon);
+
+        if (locationEntityOptional.isPresent()) {
+            return locationEntityOptional.get();
+        }
+
+        LocationEntity locationEntity = LocationEntity.builder()
+                .lat(lat)
+                .lon(lon)
+                .build();
+        locationRepository.save(locationEntity);
+
+        return locationEntity;
     }
 }

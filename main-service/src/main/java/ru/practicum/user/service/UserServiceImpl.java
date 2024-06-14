@@ -15,6 +15,7 @@ import ru.practicum.user.dto.UserDto;
 import ru.practicum.user.entity.UserEntity;
 import ru.practicum.user.repository.UserRepository;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -24,6 +25,24 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     private final ModelMapper mapper;
+
+    @Transactional(readOnly = true)
+    @Override
+    public UserDto getUserById(long userId) {
+        log.info("Entering getUserById: userId = {}", userId);
+        Optional<UserEntity> userEntityOptional = userRepository.findById(userId);
+
+        if (userEntityOptional.isEmpty()) {
+            throw new NotFoundException(
+                    "The required object was not found.",
+                    "User with id=" + userId + " was not found");
+        }
+
+        UserEntity userEntity = userEntityOptional.get();
+        log.info("Exiting getUserById");
+
+        return mapper.map(userEntity, UserDto.class);
+    }
 
     @Transactional
     @Override

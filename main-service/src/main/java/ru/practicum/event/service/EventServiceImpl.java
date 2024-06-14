@@ -16,6 +16,7 @@ import ru.practicum.event.enums.EventState;
 import ru.practicum.event.repository.EventRepository;
 import ru.practicum.event.repository.LocationRepository;
 import ru.practicum.exception.error.ForbiddenException;
+import ru.practicum.exception.error.NotFoundException;
 import ru.practicum.user.entity.UserEntity;
 import ru.practicum.user.service.UserService;
 import java.time.LocalDateTime;
@@ -98,7 +99,20 @@ public class EventServiceImpl implements EventService {
     @Transactional(readOnly = true)
     @Override
     public EventFullDto getUserEvent(long userId, long eventId) {
-        return null;
+        log.info("Entering getUserEvent: userId = {}, eventId = {}", userId, eventId);
+        Optional<EventEntity> optionalEventEntity =
+                eventRepository.findByIdAndInitiatorId(eventId, userId);
+
+        if (optionalEventEntity.isEmpty()) {
+            throw new NotFoundException(
+                    "The required object was not found.",
+                    "Event with id=" + eventId + " was not found");
+        }
+
+        EventFullDto result = mapper.map(optionalEventEntity.get(), EventFullDto.class);
+        log.info("Exiting getUserEvent");
+
+        return result;
     }
 
     @Transactional

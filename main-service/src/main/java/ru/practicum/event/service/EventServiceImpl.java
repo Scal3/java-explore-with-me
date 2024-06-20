@@ -13,12 +13,14 @@ import ru.practicum.event.dto.*;
 import ru.practicum.event.entity.EventEntity;
 import ru.practicum.event.entity.LocationEntity;
 import ru.practicum.event.enums.EventState;
+import ru.practicum.event.enums.EventUserAction;
 import ru.practicum.event.repository.EventRepository;
 import ru.practicum.event.repository.LocationRepository;
 import ru.practicum.exception.error.ForbiddenException;
 import ru.practicum.exception.error.NotFoundException;
 import ru.practicum.user.entity.UserEntity;
 import ru.practicum.user.service.UserService;
+import ru.practicum.util.CopyNonNullProperties;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -29,7 +31,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
 
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter formatter =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private final EventRepository eventRepository;
 
@@ -118,7 +121,49 @@ public class EventServiceImpl implements EventService {
     @Transactional
     @Override
     public EventFullDto updateEvent(long userId, long eventId, UpdateEventUserRequest dto) {
-        return null;
+        log.info("Entering updateEvent: userId = {}, eventId = {}, UpdateEventUserRequest = {}",
+                userId, eventId, dto);
+        Optional<EventEntity> eventEntityOptional = eventRepository.findById(eventId);
+
+        if (eventEntityOptional.isEmpty()) {
+            throw new NotFoundException(
+                    "The required object was not found.",
+                    "Event with id=" + eventId + " was not found");
+        }
+
+        EventEntity eventEntity = eventEntityOptional.get();
+
+        if (eventEntity.getState().equals(EventState.PUBLISHED)) {
+            throw new ForbiddenException(
+                    "For the requested operation the conditions are not met.",
+                    "Only pending or canceled events can be changed"
+            );
+        }
+
+        if (dto.getStateAction().equals(EventUserAction.CANCEL_REVIEW)) {
+            eventEntity.setState(EventState.CANCELED);
+        } else {
+            CopyNonNullProperties.copyNonNullProperties(dto, eventEntity, (src, target) -> {
+                handleLocationConvert(src, target);
+                handleEventDateConvert(src, target);
+                handleCategoryConvert(src, target);
+            }, "location", "category", "eventDate");
+
+            if (!isEventStartDateCorrect(eventEntity.getEventDate())) {
+                throw new ForbiddenException(
+                        "For the requested operation the conditions are not met.",
+                        "Field: eventDate. " +
+                                "Error: должно содержать дату, которая еще не наступила. Value: " +
+                                eventEntity.getEventDate()
+                );
+            }
+        }
+
+        eventRepository.save(eventEntity);
+        EventFullDto result = mapper.map(eventEntity, EventFullDto.class);
+        log.info("Exiting updateEvent");
+
+        return result;
     }
 
     @Transactional(readOnly = true)
@@ -155,7 +200,6 @@ public class EventServiceImpl implements EventService {
         return eventStartDate.isAfter(LocalDateTime.now().plusHours(2));
     }
 
-    @Transactional
     private LocationEntity getOrCreateLocationEntity(Double lat, Double lon) {
         Optional<LocationEntity> locationEntityOptional =
                 locationRepository.findByLatAndLon(lat, lon);
@@ -171,5 +215,40 @@ public class EventServiceImpl implements EventService {
         locationRepository.save(locationEntity);
 
         return locationEntity;
+    }
+
+    private void handleEventDateConvert(Object src, Object target) {
+        UpdateEventUserRequest dto = (UpdateEventUserRequest) src;
+        EventEntity eventEntity = (EventEntity) target;
+
+        String eventDate = dto.getEventDate();
+        if (eventDate != null) {
+            LocalDateTime eventStartDate = LocalDateTime.parse(dto.getEventDate(), formatter);
+            eventEntity.setEventDate(eventStartDate);
+        }
+    }
+
+    private void handleLocationConvert(Object src, Object target) {
+        UpdateEventUserRequest dto = (UpdateEventUserRequest) src;
+        EventEntity eventEntity = (EventEntity) target;
+
+        LocationDto locationDto = dto.getLocation();
+        if (locationDto != null) {
+            LocationEntity locationEntity =
+                    getOrCreateLocationEntity(dto.getLocation().getLat(), dto.getLocation().getLon());
+            eventEntity.setLocation(locationEntity);
+        }
+    }
+
+    private void handleCategoryConvert(Object src, Object target) {
+        UpdateEventUserRequest dto = (UpdateEventUserRequest) src;
+        EventEntity eventEntity = (EventEntity) target;
+
+        Integer categoryId = dto.getCategory();
+        if (categoryId != null) {
+            CategoryEntity categoryEntity =
+                    mapper.map(categoryService.getCategoryById(dto.getCategory()), CategoryEntity.class);
+            eventEntity.setCategory(categoryEntity);
+        }
     }
 }

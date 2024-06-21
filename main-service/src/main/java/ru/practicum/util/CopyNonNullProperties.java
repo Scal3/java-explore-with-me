@@ -2,6 +2,7 @@ package ru.practicum.util;
 
 import org.springframework.beans.BeanUtils;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -33,7 +34,7 @@ public class CopyNonNullProperties {
                             }
                         }
                     }
-                } catch (Exception e) {
+                } catch (IllegalAccessException | InvocationTargetException e) {
                     System.err.println("Failed to copy property: " + targetPd.getName() + " - " + e.getMessage());
                 }
             }

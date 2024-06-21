@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -169,7 +170,18 @@ public class EventServiceImpl implements EventService {
     @Transactional(readOnly = true)
     @Override
     public List<EventFullDto> getEvents(GetEventsFullDto dto) {
-        return null;
+        log.info("Entering getEvents: GetEventsFullDto = {}", dto);
+        List<EventEntity> eventEntities = eventRepository.findByFilters(dto.getUsers(),
+                dto.getCategories(),
+                dto.getStates(),
+                dto.getRangeStart(),
+                dto.getRangeEnd(),
+                PageRequest.of(dto.getFrom() / dto.getSize(), dto.getSize()));
+        List<EventFullDto> result =
+                mapper.map(eventEntities, new TypeToken<List<EventFullDto>>() {}.getType());
+        log.info("Exiting getEvents");
+
+        return result;
     }
 
     @Transactional

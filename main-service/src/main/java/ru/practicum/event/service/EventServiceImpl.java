@@ -13,6 +13,7 @@ import ru.practicum.category.service.CategoryService;
 import ru.practicum.event.dto.*;
 import ru.practicum.event.entity.EventEntity;
 import ru.practicum.event.entity.LocationEntity;
+import ru.practicum.event.enums.EventAdminAction;
 import ru.practicum.event.enums.EventState;
 import ru.practicum.event.enums.EventUserAction;
 import ru.practicum.event.repository.EventRepository;
@@ -187,7 +188,54 @@ public class EventServiceImpl implements EventService {
     @Transactional
     @Override
     public EventFullDto updateEvent(long eventId, UpdateEventAdminRequest dto) {
-        return null;
+        log.info("Entering updateEvent: eventId = {}, UpdateEventAdminRequest = {}", eventId, dto);
+        Optional<EventEntity> eventEntityOptional = eventRepository.findById(eventId);
+
+        if (eventEntityOptional.isEmpty()) {
+            throw new NotFoundException(
+                    "The required object was not found.",
+                    "Event with id=" + eventId + " was not found");
+        }
+
+        EventEntity eventEntity = eventEntityOptional.get();
+
+        if (!eventEntity.getState().equals(EventState.PENDING)) {
+            String eventName = dto.getStateAction().equals(EventAdminAction.PUBLISH_EVENT)
+                    ? "publish"
+                    : "reject";
+
+            throw new ForbiddenException(
+                    "For the requested operation the conditions are not met.",
+                    "Cannot " + eventName + " the event because it's not in the right state: PUBLISHED"
+            );
+        }
+
+        if (dto.getStateAction().equals(EventAdminAction.REJECT_EVENT)) {
+            eventEntity.setState(EventState.CANCELED);
+        } else {
+            CopyNonNullProperties.copyNonNullProperties(dto, eventEntity, (src, target) -> {
+                handleLocationConvert(src, target);
+                handleEventDateConvert(src, target);
+                handleCategoryConvert(src, target);
+            }, "location", "category", "eventDate");
+            eventEntity.setPublishedOn(LocalDateTime.now());
+
+            if (eventEntity.getEventDate().plusHours(1).isBefore(eventEntity.getPublishedOn())) {
+                throw new ForbiddenException(
+                        "For the requested operation the conditions are not met.",
+                        "Field: eventDate. " +
+                                "Error: дата начала изменяемого события должна быть " +
+                                "не ранее чем за час от даты публикации. Value: " +
+                                eventEntity.getEventDate()
+                );
+            }
+        }
+
+        eventRepository.save(eventEntity);
+        EventFullDto result = mapper.map(eventEntity, EventFullDto.class);
+        log.info("Exiting updateEvent");
+
+        return result;
     }
 
     // TODO I have to increase views here

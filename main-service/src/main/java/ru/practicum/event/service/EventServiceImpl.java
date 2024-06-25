@@ -274,11 +274,28 @@ public class EventServiceImpl implements EventService {
         return result;
     }
 
-    // TODO I have to increase views here
     @Transactional
     @Override
     public EventFullDto getEventById(long eventId) {
-        return null;
+        // TODO do it when add request module
+        //  информация о каждом событии должна включать в себя количество просмотров и количество уже одобренных заявок на участие
+        log.info("Entering getEventById: eventId = {}", eventId);
+        Optional<EventEntity> eventEntityOptional =
+                eventRepository.findByIdAndState(eventId, EventState.PUBLISHED);
+
+        if (eventEntityOptional.isEmpty()) {
+            throw new NotFoundException(
+                    "The required object was not found.",
+                    "Event with id=" + eventId + " was not found");
+        }
+
+        EventEntity eventEntity = eventEntityOptional.get();
+        eventEntity.setViews(eventEntity.getViews() + 1);
+        eventRepository.save(eventEntity);
+        EventFullDto result = mapper.map(eventEntity, EventFullDto.class);
+        log.info("Exiting getEventById");
+
+        return result;
     }
 
     private boolean isEventStartDateCorrect(LocalDateTime eventStartDate) {

@@ -39,11 +39,11 @@ public interface EventRepository extends JpaRepository<EventEntity, Long> {
             "(:paid IS NULL OR e.paid = :paid) AND " +
 
             // TODO add when add request module
-//            "(:onlyAvailable IS NULL OR ) AND " +
+            "(:onlyAvailable IS NULL) AND " +
 
             "(:rangeStart IS NULL OR e.eventDate > :rangeStart) AND " +
             "(:rangeEnd IS NULL OR e.eventDate < :rangeEnd) AND " +
-            "(:(rangeStart IS NOT NULL AND rangeEnd IS NOT NULL) OR e.eventDate > current_date) AND " +
+            "(:rangeStart IS NOT NULL OR e.eventDate > current_date) AND " +
             "e.state = PUBLISHED " +
             "ORDER BY e.eventDate DESC")
     List<EventEntity> findByFiltersOrderByEventDateDesc(String text,
@@ -60,11 +60,11 @@ public interface EventRepository extends JpaRepository<EventEntity, Long> {
             "(:paid IS NULL OR e.paid = :paid) AND " +
 
             // TODO add when add request module
-//            "(:onlyAvailable IS NULL OR ) AND " +
+            "(:onlyAvailable IS NULL) AND " +
 
             "(:rangeStart IS NULL OR e.eventDate > :rangeStart) AND " +
             "(:rangeEnd IS NULL OR e.eventDate < :rangeEnd) AND " +
-            "(:(rangeStart IS NOT NULL AND rangeEnd IS NOT NULL) OR e.eventDate > current_date) AND " +
+            "(:rangeStart IS NOT NULL OR e.eventDate > current_date) AND " +
             "e.state = PUBLISHED " +
             "ORDER BY e.views DESC")
     List<EventEntity> findByFiltersOrderByViewsDesc(String text,
@@ -74,4 +74,5 @@ public interface EventRepository extends JpaRepository<EventEntity, Long> {
                                                     LocalDateTime rangeStart,
                                                     LocalDateTime rangeEnd,
                                                     Pageable pageable);
+    Optional<EventEntity> findByIdAndState(long eventId, EventState state);
 }

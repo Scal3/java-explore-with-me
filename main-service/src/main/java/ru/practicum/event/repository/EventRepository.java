@@ -32,4 +32,46 @@ public interface EventRepository extends JpaRepository<EventEntity, Long> {
                                     LocalDateTime rangeStart,
                                     LocalDateTime rangeEnd,
                                     Pageable pageable);
+    @EntityGraph(attributePaths = {"initiator", "category"})
+    @Query("SELECT e FROM EventEntity e JOIN CategoryEntity c WHERE " +
+            "(:text IS NULL OR LOWER(e.annotation) LIKE LOWER(CONCAT('%', :text, '%')) OR LOWER(e.description) LIKE LOWER(CONCAT('%', :text, '%'))) AND " +
+            "(:categories IS NULL OR c.id IN :categories) AND " +
+            "(:paid IS NULL OR e.paid = :paid) AND " +
+
+            // TODO add when add request module
+//            "(:onlyAvailable IS NULL OR ) AND " +
+
+            "(:rangeStart IS NULL OR e.eventDate > :rangeStart) AND " +
+            "(:rangeEnd IS NULL OR e.eventDate < :rangeEnd) AND " +
+            "(:(rangeStart IS NOT NULL AND rangeEnd IS NOT NULL) OR e.eventDate > current_date) AND " +
+            "e.state = PUBLISHED " +
+            "ORDER BY e.eventDate DESC")
+    List<EventEntity> findByFiltersOrderByEventDateDesc(String text,
+                                                        List<Long> categories,
+                                                        Boolean paid,
+                                                        Boolean onlyAvailable,
+                                                        LocalDateTime rangeStart,
+                                                        LocalDateTime rangeEnd,
+                                                        Pageable pageable);
+    @EntityGraph(attributePaths = {"initiator", "category"})
+    @Query("SELECT e FROM EventEntity e JOIN CategoryEntity c WHERE " +
+            "(:text IS NULL OR LOWER(e.annotation) LIKE LOWER(CONCAT('%', :text, '%')) OR LOWER(e.description) LIKE LOWER(CONCAT('%', :text, '%'))) AND " +
+            "(:categories IS NULL OR c.id IN :categories) AND " +
+            "(:paid IS NULL OR e.paid = :paid) AND " +
+
+            // TODO add when add request module
+//            "(:onlyAvailable IS NULL OR ) AND " +
+
+            "(:rangeStart IS NULL OR e.eventDate > :rangeStart) AND " +
+            "(:rangeEnd IS NULL OR e.eventDate < :rangeEnd) AND " +
+            "(:(rangeStart IS NOT NULL AND rangeEnd IS NOT NULL) OR e.eventDate > current_date) AND " +
+            "e.state = PUBLISHED " +
+            "ORDER BY e.views DESC")
+    List<EventEntity> findByFiltersOrderByViewsDesc(String text,
+                                                    List<Long> categories,
+                                                    Boolean paid,
+                                                    Boolean onlyAvailable,
+                                                    LocalDateTime rangeStart,
+                                                    LocalDateTime rangeEnd,
+                                                    Pageable pageable);
 }

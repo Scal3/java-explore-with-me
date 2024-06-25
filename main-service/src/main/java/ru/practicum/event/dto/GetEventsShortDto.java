@@ -1,12 +1,12 @@
 package ru.practicum.event.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import ru.practicum.event.enums.EventSort;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,7 +24,7 @@ public class GetEventsShortDto {
 
     private Boolean onlyAvailable;
 
-     private EventSort sort;
+    private EventSort sort;
 
     private Integer from;
 

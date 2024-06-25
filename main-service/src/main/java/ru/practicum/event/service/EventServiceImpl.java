@@ -14,6 +14,7 @@ import ru.practicum.event.dto.*;
 import ru.practicum.event.entity.EventEntity;
 import ru.practicum.event.entity.LocationEntity;
 import ru.practicum.event.enums.EventAdminAction;
+import ru.practicum.event.enums.EventSort;
 import ru.practicum.event.enums.EventState;
 import ru.practicum.event.enums.EventUserAction;
 import ru.practicum.event.repository.EventRepository;
@@ -238,18 +239,42 @@ public class EventServiceImpl implements EventService {
         return result;
     }
 
-    // TODO I have to increase views here
-    // каждый публичный запрос для получения списка событий или полной информации о мероприятии
-    // должен фиксироваться сервисом статистики
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public List<EventShortDto> getEvents(GetEventsShortDto dto) {
-        return null;
+        // TODO do it when add request module
+        //  информация о каждом событии должна включать в себя количество просмотров и количество уже одобренных заявок на участие
+        log.info("Entering getEvents: GetEventsShortDto = {}", dto);
+        List<EventEntity> eventEntities;
+
+        if (dto.getSort().equals(EventSort.EVENT_DATE)) {
+            eventEntities = eventRepository.findByFiltersOrderByEventDateDesc(
+                    dto.getText(),
+                    dto.getCategories(),
+                    dto.getPaid(),
+                    dto.getOnlyAvailable(),
+                    dto.getRangeStart(),
+                    dto.getRangeEnd(),
+                    PageRequest.of(dto.getFrom() / dto.getSize(), dto.getSize()));
+        } else {
+            eventEntities = eventRepository.findByFiltersOrderByViewsDesc(
+                    dto.getText(),
+                    dto.getCategories(),
+                    dto.getPaid(),
+                    dto.getOnlyAvailable(),
+                    dto.getRangeStart(),
+                    dto.getRangeEnd(),
+                    PageRequest.of(dto.getFrom() / dto.getSize(), dto.getSize()));
+        }
+
+        List<EventShortDto> result =
+                mapper.map(eventEntities, new TypeToken<List<EventShortDto>>() {}.getType());
+        log.info("Exiting getEvents");
+
+        return result;
     }
 
     // TODO I have to increase views here
-    // каждый публичный запрос для получения списка событий или полной информации о мероприятии
-    // должен фиксироваться сервисом статистики
     @Transactional
     @Override
     public EventFullDto getEventById(long eventId) {

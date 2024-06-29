@@ -2,7 +2,6 @@ package ru.practicum.event.dto;
 
 import lombok.*;
 import ru.practicum.event.enums.EventSort;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -18,9 +17,9 @@ public class GetEventsShortDto {
 
     private Boolean paid;
 
-    private LocalDateTime rangeStart;
+    private String rangeStart;
 
-    private LocalDateTime rangeEnd;
+    private String rangeEnd;
 
     private Boolean onlyAvailable;
 

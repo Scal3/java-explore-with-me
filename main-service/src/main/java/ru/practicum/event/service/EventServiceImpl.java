@@ -253,8 +253,8 @@ public class EventServiceImpl implements EventService {
                     dto.getCategories(),
                     dto.getPaid(),
                     dto.getOnlyAvailable(),
-                    dto.getRangeStart(),
-                    dto.getRangeEnd(),
+                    LocalDateTime.parse(dto.getRangeStart(), formatter),
+                    LocalDateTime.parse(dto.getRangeEnd(), formatter),
                     PageRequest.of(dto.getFrom() / dto.getSize(), dto.getSize()));
         } else {
             eventEntities = eventRepository.findByFiltersOrderByViewsDesc(
@@ -262,8 +262,8 @@ public class EventServiceImpl implements EventService {
                     dto.getCategories(),
                     dto.getPaid(),
                     dto.getOnlyAvailable(),
-                    dto.getRangeStart(),
-                    dto.getRangeEnd(),
+                    LocalDateTime.parse(dto.getRangeStart(), formatter),
+                    LocalDateTime.parse(dto.getRangeEnd(), formatter),
                     PageRequest.of(dto.getFrom() / dto.getSize(), dto.getSize()));
         }
 

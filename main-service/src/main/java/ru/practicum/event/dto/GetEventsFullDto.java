@@ -2,7 +2,6 @@ package ru.practicum.event.dto;
 
 import lombok.*;
 import ru.practicum.event.enums.EventState;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -17,9 +16,9 @@ public class GetEventsFullDto {
 
     private List<EventState> states;
 
-    private LocalDateTime rangeStart;
+    private String rangeStart;
 
-    private LocalDateTime rangeEnd;
+    private String rangeEnd;
 
     private Integer from;
 

@@ -43,7 +43,9 @@ public class EventPublicController {
             @RequestParam(required = false, defaultValue = "10") int size
 
     ) {
-        log.info("Entering getEvents");
+        log.info("Entering getEvents: test = {}, categories = {}, paid = {}, rangeStart = {}, " +
+                "rangeEnd = {}, onlyAvailable = {}, sort = {}, from = {}, size = {} ",
+                text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
         GetEventsShortDto dto = GetEventsShortDto.builder()
                 .text(text)
                 .categories(categories)

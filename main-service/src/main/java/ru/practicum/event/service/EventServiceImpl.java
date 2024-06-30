@@ -176,8 +176,8 @@ public class EventServiceImpl implements EventService {
         List<EventEntity> eventEntities = eventRepository.findByFilters(dto.getUsers(),
                 dto.getCategories(),
                 dto.getStates(),
-                dto.getRangeStart(),
-                dto.getRangeEnd(),
+                LocalDateTime.parse(dto.getRangeStart(), formatter),
+                LocalDateTime.parse(dto.getRangeEnd(), formatter),
                 PageRequest.of(dto.getFrom() / dto.getSize(), dto.getSize()));
         List<EventFullDto> result =
                 mapper.map(eventEntities, new TypeToken<List<EventFullDto>>() {}.getType());

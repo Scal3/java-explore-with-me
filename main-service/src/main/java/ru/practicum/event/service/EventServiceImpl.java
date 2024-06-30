@@ -49,7 +49,7 @@ public class EventServiceImpl implements EventService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<EventShortDto> getUsersEvents(long userId, Pageable pageable) {
+    public List<EventShortDto> getUserEvents(long userId, Pageable pageable) {
         log.info("Entering getUsersEvents: userId = {}, Pageable = {}", userId, pageable);
         List<EventEntity> events =
                 eventRepository.findByInitiatorIdOrderByViewsDesc(userId, pageable);

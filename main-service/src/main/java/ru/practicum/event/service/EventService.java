@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface EventService {
 
-    List<EventShortDto> getUsersEvents(long userId, Pageable pageable);
+    List<EventShortDto> getUserEvents(long userId, Pageable pageable);
 
     EventFullDto createEvent(long userId, NewEventDto dto);
 

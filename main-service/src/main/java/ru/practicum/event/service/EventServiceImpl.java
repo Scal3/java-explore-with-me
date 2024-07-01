@@ -88,7 +88,7 @@ public class EventServiceImpl implements EventService {
                         .paid(dto.getPaid())
                         .participantLimit(dto.getParticipantLimit())
                         .requestModeration(dto.getRequestModeration())
-                        .state(dto.getRequestModeration() ? EventState.PENDING : EventState.PUBLISHED)
+                        .state(EventState.PENDING)
                         .title(dto.getTitle())
                         .views(0)
                         .category(categoryEntity)

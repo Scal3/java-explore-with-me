@@ -6,6 +6,7 @@ import ru.practicum.event.enums.EventState;
 import ru.practicum.user.entity.UserEntity;
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -69,6 +70,10 @@ public class EventEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id", nullable = false)
     private LocationEntity location;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
+    private List<RequestEntity> requests;
 
     @Override
     public int hashCode() {
